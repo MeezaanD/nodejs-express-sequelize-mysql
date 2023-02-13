@@ -1,29 +1,29 @@
-// module.exports = (sequelize, Sequelize) => {
-//     const Tutorial = sequelize.define("tutorial", {
-//       title: {
-//         type: Sequelize.STRING
-//       },
-//       description: {
-//         type: Sequelize.STRING
-//       },
-//       published: {
-//         type: Sequelize.BOOLEAN
-//       }
-//     });
+module.exports = (sequelize, Sequelize) => {
+    const Tutorials = sequelize.define("tutorials", {
+      title: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      published: {
+        type: Sequelize.BOOLEAN
+      }
+    });
   
-//     return Tutorial;
-//   };
+    return Tutorials;
+  };
 
   const sql = require("./db.js");
 
 // constructor
-const Tutorial = function(tutorial) {
-  this.title = tutorial.title;
-  this.description = tutorial.description;
-  this.published = tutorial.published;
+const Tutorials = function(tutorials) {
+  this.title = tutorials.title;
+  this.description = tutorials.description;
+  this.published = tutorials.published;
 };
 
-Tutorial.create = (newTutorial, result) => {
+Tutorials.create = (newTutorial, result) => {
   sql.query("INSERT INTO tutorials SET ?", newTutorial, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -31,12 +31,12 @@ Tutorial.create = (newTutorial, result) => {
       return;
     }
 
-    console.log("created tutorial: ", { id: res.insertId, ...newTutorial });
+    console.log("created tutorials: ", { id: res.insertId, ...newTutorial });
     result(null, { id: res.insertId, ...newTutorial });
   });
 };
 
-Tutorial.findById = (id, result) => {
+Tutorials.findById = (id, result) => {
   sql.query(`SELECT * FROM tutorials WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -45,17 +45,17 @@ Tutorial.findById = (id, result) => {
     }
 
     if (res.length) {
-      console.log("found tutorial: ", res[0]);
+      console.log("found tutorials: ", res[0]);
       result(null, res[0]);
       return;
     }
 
-    // not found Tutorial with the id
+    // not found Tutorials with the id
     result({ kind: "not_found" }, null);
   });
 };
 
-Tutorial.getAll = (title, result) => {
+Tutorials.getAll = (title, result) => {
   let query = "SELECT * FROM tutorials";
 
   if (title) {
@@ -74,7 +74,7 @@ Tutorial.getAll = (title, result) => {
   });
 };
 
-Tutorial.getAllPublished = result => {
+Tutorials.getAllPublished = result => {
   sql.query("SELECT * FROM tutorials WHERE published=true", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -87,10 +87,10 @@ Tutorial.getAllPublished = result => {
   });
 };
 
-Tutorial.updateById = (id, tutorial, result) => {
+Tutorials.updateById = (id, tutorials, result) => {
   sql.query(
     "UPDATE tutorials SET title = ?, description = ?, published = ? WHERE id = ?",
-    [tutorial.title, tutorial.description, tutorial.published, id],
+    [tutorials.title, tutorials.description, tutorials.published, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -99,18 +99,18 @@ Tutorial.updateById = (id, tutorial, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found Tutorial with the id
+        // not found Tutorials with the id
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated tutorial: ", { id: id, ...tutorial });
-      result(null, { id: id, ...tutorial });
+      console.log("updated tutorials: ", { id: id, ...tutorials });
+      result(null, { id: id, ...tutorials });
     }
   );
 };
 
-Tutorial.remove = (id, result) => {
+Tutorials.remove = (id, result) => {
   sql.query("DELETE FROM tutorials WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -119,17 +119,17 @@ Tutorial.remove = (id, result) => {
     }
 
     if (res.affectedRows == 0) {
-      // not found Tutorial with the id
+      // not found Tutorials with the id
       result({ kind: "not_found" }, null);
       return;
     }
 
-    console.log("deleted tutorial with id: ", id);
+    console.log("deleted tutorials with id: ", id);
     result(null, res);
   });
 };
 
-Tutorial.removeAll = result => {
+Tutorials.removeAll = result => {
   sql.query("DELETE FROM tutorials", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -142,4 +142,4 @@ Tutorial.removeAll = result => {
   });
 };
 
-module.exports = Tutorial;
+module.exports = Tutorials;
