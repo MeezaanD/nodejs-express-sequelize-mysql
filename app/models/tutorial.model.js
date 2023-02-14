@@ -1,20 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
-    const Tutorials = sequelize.define("tutorials", {
-      title: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.STRING
-      },
-      published: {
-        type: Sequelize.BOOLEAN
-      }
-    });
-  
-    return Tutorials;
-  };
-
-  const sql = require("./db.js");
+ const sql = require("./db.js");
 
 // constructor
 const Tutorials = function(tutorials) {
@@ -23,16 +7,16 @@ const Tutorials = function(tutorials) {
   this.published = tutorials.published;
 };
 
-Tutorials.create = (newTutorial, result) => {
-  sql.query("INSERT INTO tutorials SET ?", newTutorial, (err, res) => {
+Tutorials.create = (newTutorials, result) => {
+  sql.query("INSERT INTO tutorials SET ?", newTutorials, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
 
-    console.log("created tutorials: ", { id: res.insertId, ...newTutorial });
-    result(null, { id: res.insertId, ...newTutorial });
+    console.log("created tutorials: ", { id: res.insertId, ...newTutorials });
+    result(null, { id: res.insertId, ...newTutorials });
   });
 };
 
